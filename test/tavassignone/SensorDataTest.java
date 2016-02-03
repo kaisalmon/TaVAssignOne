@@ -7,6 +7,7 @@ package tavassignone;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,14 +18,6 @@ import static org.junit.Assert.*;
  * @author Kai
  */
 public class SensorDataTest {
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
     /**
      * Test of getSensorData method, of class SensorData.
      */
@@ -59,5 +52,26 @@ public class SensorDataTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+    /**
+     * Test of has_even_bits method, of class SensorData.
+     */
+    @Test
+    public void testHas_even_bits() {
+        System.out.println("has_even_bits");
+        
+        String text = "1100000110011101010111011000101011011000011111111111111111111110"; //42 1 bits
+        double d = Double.longBitsToDouble(new BigInteger(text, 2).longValue());
+        boolean expResult = true;
+        boolean result = SensorData.has_even_bits(d);
+        assertEquals(expResult, result);
+        
+        text = "1100000110011101010111011000101011011000011111111111111111111111"; //43 1 bits
+        d = Double.longBitsToDouble(new BigInteger(text, 2).longValue());
+        expResult = false;
+        result = SensorData.has_even_bits(d);
+        assertEquals(expResult, result);
+    }
+
     
 }

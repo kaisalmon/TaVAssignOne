@@ -38,10 +38,10 @@ public class SensorData {
      * 
      * Post-Condition:
      * The returned value is a 28byte byte stream in the following format:
-     * [8byte start_delimiter][8byte torque double][check bit for torque]
-     * [7byte torque delimiter][8byte ultra_dist double][check bit for ultra_dist]
-     * [7byte ultra_dist delimiter][8byte ir_dist double][check bit for ir_dist]
-     * [7byte ir_dist delimiter]
+     * [8bit start_delimiter][8byte torque double][check bit for torque]
+     * [7bit torque delimiter][8byte ultra_dist double][check bit for ultra_dist]
+     * [7bit ultra_dist delimiter][8byte ir_dist double][check bit for ir_dist]
+     * [7bit ir_dist delimiter]
      * 
      * The check bit is 1 if there are an odd number of 1-bits in the corresponding double, and 
      * otherwise 0;
@@ -52,21 +52,22 @@ public class SensorData {
     public static ByteArrayOutputStream getSensorData(SensorData sensorData) throws IOException{
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         byte[] bytes = new byte[28];
-        System.out.println(Arrays.toString(bytes));
         bytes[0] = start_delimiter;
-        System.out.println(Arrays.toString(bytes));
         System.arraycopy(toByteArray(sensorData.torque), 0, bytes, 1, 8);
-        System.out.println(Arrays.toString(bytes));
         bytes[9] = torque_delimiter;
-        System.out.println(Arrays.toString(bytes));
+        if(has_even_bits(sensorData.torque))
+            bytes[9] += Math.pow(2, 7);
+        
         System.arraycopy(toByteArray(sensorData.ir_dist), 0, bytes, 10, 8);
-        System.out.println(Arrays.toString(bytes));
         bytes[18] = ir_dist_delimiter;
-        System.out.println(Arrays.toString(bytes));
+        if(has_even_bits(sensorData.ir_dist))
+            bytes[18] += Math.pow(2, 7);
+        
         System.arraycopy(toByteArray(sensorData.ultra_dist), 0, bytes, 19, 8);
-        System.out.println(Arrays.toString(bytes));
         bytes[27] = ultra_dist_delimiter;
-        System.out.println(Arrays.toString(bytes));
+        if(has_even_bits(sensorData.ultra_dist))
+            bytes[27] += Math.pow(2, 7);
+        
         stream.write(bytes);
         return stream;
     }
@@ -97,13 +98,46 @@ public class SensorData {
     }
     
     
+    
+    /**
+     * Description: 
+     * Counts the bits in a double
+     * 
+     * Pre-Condition: 
+     * d is a double
+     * 
+     * Post-Condition:
+     * The check bit is 1 if there are an odd number of 1-bits in the corresponding double, and 
+     * otherwise 0;
+     * 
+     * Test Cases:
+     * tc0: a double with an even number of bits;
+     * tc1: a double with an odd number of bits;
+     */
+    public static boolean has_even_bits(double d){
+        int evenBits = 0;
+        byte[] bytes = toByteArray(d);
+        for(int i = 0; i < 8; i++){
+            if(bytes[i]%2 == 0)
+                evenBits += Integer.bitCount(bytes[i]);
+        }
+        return evenBits % 2 == 0;
+    }
+    
+    /**
+     * Helper function to convert doubles to arrays
+     */    
     public static byte[] toByteArray(double value) {
         byte[] bytes = new byte[8];
         ByteBuffer.wrap(bytes).putDouble(value);
         return bytes;
     }
 
+    /**
+     * Helper function to convert arrays to doubles
+     */
     public static double toDouble(byte[] bytes) {
         return ByteBuffer.wrap(bytes).getDouble();
     }
+    
 }
