@@ -12,10 +12,10 @@ import java.util.Arrays;
  * @author Kai
  */
 public class SensorData {
-    public static final byte start_delimiter = 0x5; //8 byte delimiter
-    public static final byte torque_delimiter = 0x6;//7 byte delimiter
-    public static final byte ultra_dist_delimiter = 0x7;//7 byte delimiter
-    public static final byte ir_dist_delimiter = 0x8;//7 byte delimiter
+    public static final byte start_delimiter = 5; //8 bit delimiter
+    public static final byte torque_delimiter = 6;//7 bit delimiter
+    public static final byte ultra_dist_delimiter = 7;//7 bit delimiter
+    public static final byte ir_dist_delimiter = 8;//7 bit delimiter
     
     double torque;
     double ultra_dist;
