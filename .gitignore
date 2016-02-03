@@ -1,3 +1,6 @@
 *.xml
 *.swp
 *~
+*.mf
+build/*
+nbproject/*
