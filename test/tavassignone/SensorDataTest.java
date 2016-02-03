@@ -24,9 +24,9 @@ public class SensorDataTest {
     @Test
     public void testGetSensorData() throws IOException {
         System.out.println("getSensorData");
-        SensorData sensorData = new SensorData(0.5d, 23d, 7.25d);
+        SensorData sensorData = new SensorData(0.5d, 213d, 7.25d);
         
-        byte[] expResult = {0x3f000000,0x41b80000,0x40e80000};
+        byte[] expResult = {1,1,1};
         ByteArrayOutputStream result = SensorData.getSensorData(sensorData);
         
         byte[] resultBytes = result.toByteArray();
@@ -43,14 +43,48 @@ public class SensorDataTest {
      * Test of isValidStream method, of class SensorData.
      */
     @Test
-    public void testIsValidStream() {
-        System.out.println("isValidStream");
-        ByteArrayOutputStream stream = null;
-        boolean expResult = false;
-        boolean result = SensorData.isValidStream(stream);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testIsValidStream() throws IOException {
+        String labels[] = {
+            "Valid Stream",
+            "Insufficent Length",
+            "Incorrect Start Delimeter",
+            "Incorrect Torque CheckBit",
+            "Incorrect Torque Delimeter",
+            "Incorrect IR CheckBit",
+            "Incorrect IR Delimeter",
+            "Incorrect Ultra CheckBit",
+            "Incorrect Ultra Delimeter",
+        };
+        byte[][] tc = {//array of test cases
+            {5, 63, -32, 0, 0, 0, 0, 0, 0, 6, 64, 8, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, 8},
+            {5, 63, -32, 0, 0, 0, 0, 0},
+            {105, 63, -32, 0, 0, 0, 0, 0, 0, 6, 64, 8, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, 8},
+            {5, 63, -32, 0, 0, 0, 0, 0, 0, -122, 64, 8, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, 8},
+            {5, 63, -32, 0, 0, 0, 0, 0, 0, 16, 64, 8, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, 8},
+            {5, 63, -32, 0, 0, 0, 0, 0, 0, 6, 64, 8, 0, 0, 0, 0, 0, 0, 7, 64, 29, 0, 0, 0, 0, 0, 0, 8},
+            {5, 63, -32, 0, 0, 0, 0, 0, 0, 6, 64, 8, 0, 0, 0, 0, 0, 0, 110, 64, 29, 0, 0, 0, 0, 0, 0, 8},
+            {5, 63, -32, 0, 0, 0, 0, 0, 0, 6, 64, 8, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, -120},
+            {5, 63, -32, 0, 0, 0, 0, 0, 0, 6, 64, 8, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, 14},
+        };
+        boolean results[] = { //array of expected results
+            true,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+        };
+
+        for(int i = 0; i<8;i++){
+            System.out.println("isValidStream - tc"+i+": "+labels[i]);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            stream.write(tc[i]);
+            boolean expResult = results[i];
+            boolean result = SensorData.isValidStream(stream);
+            assertEquals(expResult, result);
+        }
     }
 
     /**
