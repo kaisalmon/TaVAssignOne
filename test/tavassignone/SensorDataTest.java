@@ -26,7 +26,7 @@ public class SensorDataTest {
         System.out.println("getSensorData");
         SensorData sensorData = new SensorData(0.5d, 3d, 7.25d);
         
-        byte[] expResult = {5, 63, -32, 0, 0, 0, 0, 0, 0, -122, 64, 29, 0, 0, 0, 0, 0, 0, -121, 64, 8, 0, 0, 0, 0, 0, 0, 8};
+        byte[] expResult = {5, 63, -32, 0, 0, 0, 0, 0, 0, -122, 64, 8, 0, 0, 0, 0, 0, 0, 7, 64, 29, 0, 0, 0, 0, 0, 0, -120};
         ByteArrayOutputStream result = SensorData.getSensorData(sensorData);
         
         byte[] resultBytes = result.toByteArray();

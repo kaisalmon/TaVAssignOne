@@ -55,17 +55,17 @@ public class SensorData {
         bytes[0] = start_delimiter;
         System.arraycopy(toByteArray(sensorData.torque), 0, bytes, 1, 8);
         bytes[9] = torque_delimiter;
-        if(has_even_bits(sensorData.torque))
+        if(!has_even_bits(sensorData.torque))
             bytes[9] += Math.pow(2, 7);
         
         System.arraycopy(toByteArray(sensorData.ultra_dist), 0, bytes, 10, 8);
         bytes[18] = ultra_dist_delimiter;
-        if(has_even_bits(sensorData.ultra_dist))
+        if(!has_even_bits(sensorData.ultra_dist))
             bytes[18] += Math.pow(2, 7);
         
         System.arraycopy(toByteArray(sensorData.ir_dist), 0, bytes, 19, 8);
         bytes[27] = ir_dist_delimiter;
-        if(has_even_bits(sensorData.ir_dist))
+        if(!has_even_bits(sensorData.ir_dist))
             bytes[27] += Math.pow(2, 7);
         
         stream.write(bytes);
