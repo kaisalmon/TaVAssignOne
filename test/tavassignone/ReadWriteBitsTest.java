@@ -16,7 +16,7 @@ public class ReadWriteBitsTest {
      * Test of writeBits method, of class ReadWriteBits.
      */
     @Test
-    public void testWriteBits() {
+    public void testWriteBits() throws IOException {
         /*TC 0 */{
             System.out.println("writeBits - tc0");
             int n = 0;
@@ -80,7 +80,7 @@ public class ReadWriteBitsTest {
             ReadWriteBits rwBits = new ReadWriteBits();
             int result = rwBits.writeBits(n, string);
             assertEquals(expResult, result);
-            assertEquals(rwBits.buffer, "123");
+            assertEquals(rwBits.buffer, "101");
         }
         
     }
@@ -143,4 +143,3 @@ public class ReadWriteBitsTest {
     }
     
 }
-
