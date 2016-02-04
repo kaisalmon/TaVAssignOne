@@ -2,6 +2,7 @@
 package tavassignone;
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -10,6 +11,7 @@ import java.util.Arrays;
  * @author Holtza
  */
 public class ReadWriteBits {
+    public ArrayList<Byte> buffer = new ArrayList();
     
     /**
      * Description: Appends first n number of bits from bitstream 'stream' into the
@@ -25,7 +27,7 @@ public class ReadWriteBits {
      * tc4: The length of 's' is > 0, 'n' > 0, and 'n' = length of 's'.
      * tc5: The length of 's' is > 0, 'n' > 0, and 'n' < length of 's'.
      */
-    public static int writeBits(int n, ByteArrayOutputStream stream){
+    public int writeBits(int n, ByteArrayOutputStream stream){
         return 0;
     }
 	
@@ -43,7 +45,7 @@ public class ReadWriteBits {
      * tc3: 'n' > 0 && buffer length > 0
      * tc4: 'n' > 0 && buffer length > 0 && buffer length < 'n'
      */
-     public static int readBits(int n){
+     public int readBits(int n){
              return 0;
      }
 }
