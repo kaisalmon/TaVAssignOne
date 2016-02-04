@@ -139,5 +139,5 @@ public class SensorData {
     public static double toDouble(byte[] bytes) {
         return ByteBuffer.wrap(bytes).getDouble();
     }
-    
+
 }
