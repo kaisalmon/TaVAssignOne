@@ -16,7 +16,7 @@ public class ReadWriteBitsTest {
      * Test of writeBits method, of class ReadWriteBits.
      */
     @Test
-    public void testWriteBits() throws IOException {
+    public void testWriteBits() {
         /*TC 0 */{
             System.out.println("writeBits - tc0");
             int n = 0;
@@ -90,27 +90,50 @@ public class ReadWriteBitsTest {
      * Add values to buffer.
      */
     @Test
-    public void testReadBits() throws IOException {
+    public void testReadBits() {
         /*TC 0 */{
             System.out.println("readBits - tc0");
             int n = -1;
+            ReadWriteBits rwBits = new ReadWriteBits();
+            ReadData result = rwBits.readBits(n);
+            ReadData expResult = new ReadData(1, "");
+            assertEquals(result, expResult);
             
         }
         /*TC 1 */{
             System.out.println("readBits - tc1");
-            int n = 0;     
+            int n = 0;
+            ReadWriteBits rwBits = new ReadWriteBits();
+            ReadData result = rwBits.readBits(n);
+            ReadData expResult = new ReadData(1, "");
+            assertEquals(result, expResult);
         }
         /*TC 2 */{
             System.out.println("readBits - tc2");
-            int n = 3;     
+            int n = 3;
+            ReadWriteBits rwBits = new ReadWriteBits();
+            rwBits.buffer = "";
+            ReadData result = rwBits.readBits(n);
+            ReadData expResult = new ReadData(1, "");
+            assertEquals(result, expResult);
         }
         /*TC 3 */{
             System.out.println("readBits - tc3");
-            int n = 3;     
+            int n = 3; 
+            ReadWriteBits rwBits = new ReadWriteBits();
+            rwBits.buffer = "100110";
+            ReadData result = rwBits.readBits(n);
+            ReadData expResult = new ReadData(0, "100");
+            assertEquals(result, expResult);
         }
         /*TC 4 */{
             System.out.println("readBits - tc4");
-            int n = 3;     
+            int n = 3;    
+            ReadWriteBits rwBits = new ReadWriteBits();
+            rwBits.buffer = "10";
+            ReadData result = rwBits.readBits(n);
+            ReadData expResult = new ReadData(1, "");
+            assertEquals(result, expResult);
         }
     }
     

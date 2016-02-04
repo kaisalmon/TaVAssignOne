@@ -11,11 +11,11 @@ import java.util.Arrays;
 public class ReadData {
     
     int n;
-    ByteArrayOutputStream stream;
+    String string;
     
-    public ReadData(int n, ByteArrayOutputStream stream){
+    public ReadData(int n, String string){
         this.n = n;
-        this.stream = stream;
+        this.string = string;
 }
     
 }
