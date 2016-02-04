@@ -94,7 +94,40 @@ public class SensorData {
      * tc8: valid stream
      */
     public static boolean isValidStream(ByteArrayOutputStream stream){
-        return false;
+        boolean checker[] = {false , false, false}; 
+        byte[] result = stream.toByteArray();
+        byte[] torque = new byte[8];
+        byte[] ultra_dist = new byte[8];
+        byte[] ir_dist = new byte[8];
+    
+        if(result.length == 28 && result[0] == start_delimiter){
+            
+            System.arraycopy(result, 1, torque, 0, 8);
+            System.arraycopy(result, 10, ultra_dist, 0, 8);
+            System.arraycopy(result, 19, ir_dist, 0, 8);
+            
+            if(!has_even_bits(toDouble(torque))){
+              if (result[9] == torque_delimiter - Math.pow(2, 7)){ checker[0] = true; } 
+            } else {
+                if (result[9] == torque_delimiter) { checker[0] = true; }
+            }
+            if(!has_even_bits(toDouble(ultra_dist))){
+              if (result[18] == ultra_dist_delimiter - Math.pow(2, 7)){ checker[1] = true; }
+            } else {
+                if(result[18] == ultra_dist_delimiter) { checker[1] = true; }
+            }
+            if(!has_even_bits(toDouble(ir_dist))){
+              if (result[27] == ir_dist_delimiter - Math.pow(2, 7)){ checker[2] = true; }
+            } else {
+                if(result[27] == ir_dist_delimiter) { checker[2] = true; }
+            }
+            
+        }
+        
+        if(checker[0] == true && checker[1] == true && checker[2] == true){
+            return true;
+        }
+          return false;
     }
     
     
