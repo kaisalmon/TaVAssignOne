@@ -93,7 +93,7 @@ public class SensorData {
      * tc7: stream with correct number of bits, which does not contain the correct ir_dist check bit with the correct value
      * tc8: valid stream
      */
-    public static boolean isValidStream(ByteArrayOutputStream stream){
+      public static boolean isValidStream(ByteArrayOutputStream stream){
         boolean checker[] = {false , false, false}; 
         byte[] result = stream.toByteArray();
         byte[] torque = new byte[8];
@@ -129,7 +129,6 @@ public class SensorData {
         }
           return false;
     }
-    
     
     
     /**
@@ -172,5 +171,5 @@ public class SensorData {
     public static double toDouble(byte[] bytes) {
         return ByteBuffer.wrap(bytes).getDouble();
     }
-    
+
 }
