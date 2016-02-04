@@ -2,6 +2,8 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+package tavassignone;
+
 /**
  *
  * @author Holtza
@@ -17,11 +19,33 @@ public class ReadWriteBits {
      * Test cases:
      * tc0: The length of 's' is 0.
      * tc1: The length of 's' is > 0 and 'n' < 0.
-     * tc2: The length of 's' is > 0 and 'n' = 0.
+     * tc2: The length of 's' is > 0 and 'n' == 0.
      * tc3: The length of 's' is > 0 and 'n' > 0.
      * tc4: The length of 's' is > 0, 'n' > 0, and 'n' < length of 's'.
+	 *
+	 * @param n
+     * @param stream
+     * @return 
      */
     public static int writeBits(int n, ByteArrayOutputStream stream){
         return 0;
     }
+	
+	/**
+	 * Description: Removed 'n' bits from the beginning of the output buffer stream.
+	 * Pre-condition: n is non-negative and smaller than or equal to the length of
+	 *				  the output buffer stream.
+	 * Post-condition: 'n' bits are removed from the buffer, and an object containing
+	 * 					an error code (0 if successful, 1 otherwise) and the removed
+	 *					bits is returned.
+	 * Test cases:
+	 * tc0: 'n' < 0
+	 * tc1: 'n' == 0
+	 * tc2: 'n' > 0 && buffer length == 0
+	 * tc3: 'n' > 0 && buffer length > 0
+	 * tc4: 'n' > 0 && buffer length > 0 && buffer length < 'n'
+	 */
+	 public static int readBits(int n){
+		 return 0;
+	 }
 }
