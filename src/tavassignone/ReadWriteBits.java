@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @author Holtza
  */
 public class ReadWriteBits {
-    public ArrayList<Byte> buffer = new ArrayList();
+    public String buffer;
     
     /**
      * Description: Appends first n number of bits from bitstream 'stream' into the
@@ -27,7 +27,7 @@ public class ReadWriteBits {
      * tc4: The length of 's' is > 0, 'n' > 0, and 'n' = length of 's'.
      * tc5: The length of 's' is > 0, 'n' > 0, and 'n' < length of 's'.
      */
-    public int writeBits(int n, ByteArrayOutputStream stream){
+    public int writeBits(int n, String string){
         return 0;
     }
 	
