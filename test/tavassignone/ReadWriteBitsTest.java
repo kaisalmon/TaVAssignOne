@@ -97,7 +97,8 @@ public class ReadWriteBitsTest {
             ReadWriteBits rwBits = new ReadWriteBits();
             ReadData result = rwBits.readBits(n);
             ReadData expResult = new ReadData(1, "");
-            assertEquals(result, expResult);
+            assertEquals(result.n, expResult.n);
+            assertEquals(result.string, expResult.string);
             
         }
         /*TC 1 */{
@@ -106,7 +107,8 @@ public class ReadWriteBitsTest {
             ReadWriteBits rwBits = new ReadWriteBits();
             ReadData result = rwBits.readBits(n);
             ReadData expResult = new ReadData(1, "");
-            assertEquals(result, expResult);
+            assertEquals(result.n, expResult.n);
+            assertEquals(result.string, expResult.string);
         }
         /*TC 2 */{
             System.out.println("readBits - tc2");
@@ -115,7 +117,8 @@ public class ReadWriteBitsTest {
             rwBits.buffer = "";
             ReadData result = rwBits.readBits(n);
             ReadData expResult = new ReadData(1, "");
-            assertEquals(result, expResult);
+            assertEquals(result.n, expResult.n);
+            assertEquals(result.string, expResult.string);
         }
         /*TC 3 */{
             System.out.println("readBits - tc3");
@@ -124,7 +127,8 @@ public class ReadWriteBitsTest {
             rwBits.buffer = "100110";
             ReadData result = rwBits.readBits(n);
             ReadData expResult = new ReadData(0, "100");
-            assertEquals(result, expResult);
+            assertEquals(result.n, expResult.n);
+            assertEquals(result.string, expResult.string);
         }
         /*TC 4 */{
             System.out.println("readBits - tc4");
@@ -133,7 +137,8 @@ public class ReadWriteBitsTest {
             rwBits.buffer = "10";
             ReadData result = rwBits.readBits(n);
             ReadData expResult = new ReadData(1, "");
-            assertEquals(result, expResult);
+            assertEquals(result.n, expResult.n);
+            assertEquals(result.string, expResult.string);
         }
     }
     

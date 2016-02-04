@@ -45,7 +45,7 @@ public class ReadWriteBits {
      * tc4: 'n' > 0 && buffer length > 0 && buffer length < 'n'
      */
      public ReadData readBits(int n){
-             ReadData data = new ReadData(0, "101");
+             ReadData data = new ReadData(1, "");
              return data;
      }
 }
