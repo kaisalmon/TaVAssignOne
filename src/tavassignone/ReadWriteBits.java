@@ -32,12 +32,12 @@ public class ReadWriteBits {
     }
 	
     /**
-     * Description: Removed 'n' bits from the beginning of the output buffer stream.
+     * Description: Removes 'n' bits from the beginning of the output buffer stream.
      * Pre-condition: n is non-negative and smaller than or equal to the length of
      *				  the output buffer stream.
      * Post-condition: 'n' bits are removed from the buffer, and an object containing
      * 					an error code (0 if successful, 1 otherwise) and the removed
-     *					bits is returned.
+     *					bits are returned.
      * Test cases:
      * tc0: 'n' < 0
      * tc1: 'n' == 0
