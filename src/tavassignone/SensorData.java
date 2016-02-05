@@ -6,10 +6,9 @@
 package tavassignone;
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 /**
  *
- * @author Kai
+ * @author Kai & Kristiyan
  */
 public class SensorData {
     public static final byte start_delimiter = 5; //8 bit delimiter
@@ -48,6 +47,9 @@ public class SensorData {
      * 
      * Test Cases:
      * tc0: an arbitrary sensor_data object returns the correct, pre-calculated, stream;
+     * @param sensorData
+     * @return 
+     * @throws java.io.IOException 
      */
     public static ByteArrayOutputStream getSensorData(SensorData sensorData) throws IOException{
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -92,6 +94,8 @@ public class SensorData {
      * tc6: stream with correct number of bits, which does not contain the correct ultra_dist check bit with the correct value
      * tc7: stream with correct number of bits, which does not contain the correct ir_dist check bit with the correct value
      * tc8: valid stream
+     * @param stream
+     * @return 
      */
       public static boolean isValidStream(ByteArrayOutputStream stream){
         boolean checker[] = {false , false, false}; 

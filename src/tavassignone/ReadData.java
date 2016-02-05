@@ -5,8 +5,9 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 /**
- *
- * @author Holtza
+ * Object returned by readBits in class ReadWriteBits.
+ * 
+ * @author Martina
  */
 public class ReadData {
     

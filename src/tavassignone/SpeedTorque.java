@@ -5,27 +5,131 @@
  */
 package tavassignone;
 
-import java.io.ByteArrayOutputStream;
+import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import static tavassignone.SensorData.has_even_bits;
 import static tavassignone.SensorData.toDouble;
 
 /**
  *
- * @author Kai
+ * @author Kai & Martina
  */
 public class SpeedTorque {
 
-    private float speed;
-    private float torque;
+
 
     public static final byte start_delimiter = 9; //8 bit delimiter
     public static final byte torque_delimiter = 10;//7 bit delimiter
     public static final byte speed_delimiter = 11;//7 bit delimiter
+    
+    public static final int packetLength = 19; //the length of a full packet
 
-    public SpeedTorque(float speed, float torque) {
-        this.speed = speed;
-        this.torque = torque;
+   
+    
+    /**
+     * Description: Given a stream of bytes, searches for the delimiter 
+     * specifying the beginning of the 
+     * next packet (ignores the bits until there), reads the bits of a whole
+     * packet, runs the error detection mechanism to make sure that the packet 
+     * is not corrupted and if so, puts the values for speed and torque in an 
+     * object and returns its reference. Otherwise, it searches for the next 
+     * packet until it finds an uncorrupted packet.
+     * 
+     * Pre-condition: 'stream' is a byte array with one or more packets
+     * Post-condition: Returns reference to object with speed and torque.
+     * Test cases:
+     * tc0: stream is empty
+     * tc1: stream does not contain any full packets
+     * tc2: all packets are corrupt
+     * tc3: first packet is corrupt, non-corrupt packet later in stream
+     * tc4: first packet is not corrupt
+     * tc5: startdelimiter found but no full packets in stream
+     * @param stream
+     * @return 
+     */
+    public SpeedTorqueObj readSpeedTorque (ByteArrayOutputStream stream){
+        double speed = 0;
+        double torque = 0;
+        int startindex = 0;
+        int index = 0;
+        boolean validPacketFound = false;
+        
+        byte[] original = stream.toByteArray();
+        byte[] packet = new byte[packetLength];
+        
+        while(!validPacketFound){
+            
+            index = packetStartAt(startindex, original);
+            
+            if (index == -1){
+                System.out.println("No packet found.");
+                SpeedTorqueObj obj = new SpeedTorqueObj(-1, -1);
+                return obj;
+            }
+            
+            System.arraycopy(original, index, packet, 0, packetLength);
+            
+            startindex ++; //increment in case we need to search for a new start delimiter
+            
+            ByteArrayOutputStream packetStream = new ByteArrayOutputStream(packetLength);
+            try{
+            packetStream.write(packet);
+            }catch (IOException e){
+            }
+            
+            boolean valid = isValidStream(packetStream); //check if valid stream
+            
+            if(valid){
+                validPacketFound = true;
+            }else{
+                packet = new byte[packetLength]; //empty array to fill it with new packet
+            }
+        }
+        
+        byte[] torqueBytes = new byte[8];
+        byte[] speedBytes = new byte[8];
+        System.arraycopy(packet, 1, torqueBytes, 0, 8);
+        System.arraycopy(packet, 10, speedBytes, 0, 8);
+            
+        torque = toDouble(torqueBytes);
+        speed = toDouble(speedBytes);
+        
+        SpeedTorqueObj obj = new SpeedTorqueObj(torque, speed);
+        return obj;
+        
+    }
+    
+    /**
+     * Helper function to readSpeedTorque.
+     * Start looking at index startindex in byte array b, and returns the index
+     * of the first occurence of a start delimiter.
+     * 
+     * If the array is not long enough to contain a full packet, or if no start 
+     * delimiter is found, a negative int is returned.
+     * 
+     * @param startindex
+     * @param b
+     * @return 
+     */
+    public int packetStartAt(int startindex, byte[] b){
+        //readSpeedTorque tc 0: stream is empty
+        //also readSpeedTorque tc 1: no full packets (when stream ends without
+        //finding a full packet)
+        if (b.length < packetLength){
+            System.out.println("No full packet found");
+            return -1;
+        }
+        
+        //Start looking from start index, until end of stream
+        //readSpeedTorque tc1
+        for (int i = startindex; i < b.length-1; i++){
+            //if a start delimiter is found, return the index
+            if (b[i] == start_delimiter) return i;
+        }
+        
+        //If no start delimiter is found, return -1
+        return -1;
     }
 
     /**
@@ -35,11 +139,17 @@ public class SpeedTorque {
      *
      * Post-Condition: Returns true if the stream is valid, and otherwise returns false;
      *
-     * Test Cases: tc0: stream with invalid length tc1: stream with correct number of bits, which does not contain the
-     * start delimiter in the correct position tc2: stream with correct number of bits, which does not contain the
-     * ir_dist delimiter in the correct position tc3: stream with correct number of bits, which does not contain the
-     * correct torque check bit with the correct value tc4: stream with correct number of bits, which does not contain
-     * the correct ultra_dist check bit with the correct value tc5: valid stream tc6: valid stream with extra bits
+     * Test Cases: 
+     * tc0: stream with invalid length 
+     * tc1: stream with correct number of bits, which does not contain the
+     * start delimiter in the correct position 
+     * tc2: stream with correct number of bits, which does not contain the
+     * ir_dist delimiter in the correct position 
+     * tc3: stream with correct number of bits, which does not contain the
+     * correct torque check bit with the correct value 
+     * tc4: stream with correct number of bits, which does not contain
+     * the correct ultra_dist check bit with the correct value 
+     * tc5: valid stream tc6: valid stream with extra bits
      */
     public static boolean isValidStream(ByteArrayOutputStream stream) {
         boolean checker[] = {false, false};
@@ -73,6 +183,13 @@ public class SpeedTorque {
         }
         System.out.println(Arrays.toString(checker));
         return checker[0] == true && checker[1] == true;
+    }
+    
+        /**
+     * Helper function to convert arrays to doubles
+     */
+    public static double toDouble(byte[] bytes) {
+        return ByteBuffer.wrap(bytes).getDouble();
     }
 
 }

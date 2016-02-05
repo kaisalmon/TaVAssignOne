@@ -1,19 +1,19 @@
 
 package tavassignone;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author Kai
+ * @author Kai & Martina
  */
 public class ReadWriteBitsTest {
 
     /**
      * Test of writeBits method, of class ReadWriteBits.
+     * @throws java.io.IOException
      */
     @Test
     public void testWriteBits() throws IOException {
@@ -68,8 +68,6 @@ public class ReadWriteBitsTest {
             int result = rwBits.writeBits(n, string);
             assertEquals(expResult, result);
             assertEquals(rwBits.buffer, "10");
-            //assertEquals(rwBits.buffer.get(0).byteValue(), 1);
-            //assertEquals(rwBits.buffer.get(1).byteValue(), 2);
         }
         
          /*TC 5 */{
