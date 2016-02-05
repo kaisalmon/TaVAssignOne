@@ -36,8 +36,10 @@ public class SpeedTorque {
      * object and returns its reference. Otherwise, it searches for the next 
      * packet until it finds an uncorrupted packet.
      * 
-     * Pre-condition: 'stream' is a byte array with one or more packets
-     * Post-condition: Returns reference to object with speed and torque.
+     * Pre-condition: 'stream' is a ByteArrayOutputStream with one or more packets
+     * Post-condition: Returns reference to object with speed and torque if the
+     *                  data could be extracted, otherwise a reference to an object
+     *                  with value -1 for speed and torque is returned.
      * Test cases:
      * tc0: stream is empty
      * tc1: stream does not contain any full packets
