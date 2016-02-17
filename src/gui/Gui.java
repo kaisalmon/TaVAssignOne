@@ -28,7 +28,7 @@ import tavassignone.SpeedTorqueObj;
  * @author Kai
  */
 public class Gui extends JFrame{
-    final JSpinner outIR, outUV, outTorque, inSpeed, inAngle;
+    final JSpinner outIR, outSonar, outTorque, inSpeed, inAngle;
     
     public Gui() throws HeadlessException {
         super("Tav Phase 2");
@@ -39,7 +39,7 @@ public class Gui extends JFrame{
         this.setLayout(new GridLayout(5,1,15,15));
         outTorque = this.createRow("Torque", true);
         outIR = this.createRow("IR", true);
-        outUV = this.createRow("UV", true);
+        outSonar = this.createRow("Sonar", true);
         //JButton btn = new JButton("Send");
         //this.add(btn);
         inSpeed = this.createRow("Speed", false);
@@ -58,7 +58,7 @@ public class Gui extends JFrame{
         
         Timer send;
         send = new Timer(2000, (ActionEvent ae) -> {
-            CarInterface.send((Double)outTorque.getValue(), (Double)outIR.getValue(), (Double)outUV.getValue());
+            CarInterface.send((Double)outTorque.getValue(), (Double)outIR.getValue(), (Double)outSonar.getValue());
         });
         send.start();
     }
