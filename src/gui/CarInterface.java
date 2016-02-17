@@ -5,6 +5,7 @@
  */
 package gui;
 
+import tavassignone.Car;
 import tavassignone.SpeedTorqueObj;
 
 /**
@@ -13,11 +14,13 @@ import tavassignone.SpeedTorqueObj;
  */
 class CarInterface {
 
-    static SpeedTorqueObj receiveData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    static SpeedTorqueObj receiveData() {    	
+    	Car car = new Car();
+    	SpeedTorqueObj data = new SpeedTorqueObj(car.getSpeed(), car.getTorque());
+        return data;
     }
 
-    static void send(double torque, double ir, double sonar) {
+    static void send(double torque, double ir, double uv) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
