@@ -17,7 +17,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
+import tavassignone.SpeedTorque;
+import tavassignone.SpeedTorqueObj;
 
 /**
  *
@@ -32,21 +36,31 @@ public class Gui extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(400, 300);
         this.setResizable(false);
-        this.setLayout(new GridLayout(6,1,15,15));
+        this.setLayout(new GridLayout(5,1,15,15));
         outTorque = this.createRow("Torque", true);
         outIR = this.createRow("IR", true);
         outUV = this.createRow("UV", true);
-        JButton btn = new JButton("Send");
-        this.add(btn);
+        //JButton btn = new JButton("Send");
+        //this.add(btn);
         inSpeed = this.createRow("Speed", false);
         inAngle = this.createRow("Angle", false);
         this.revalidate();
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                outIR.setValue(0);
-            }
+       // btn.addActionListener((ActionEvent ae) -> {
+       //     outIR.setValue(0);
+       // });
+        Timer receive;
+        receive = new Timer(1000, (ActionEvent ae) -> {
+            SpeedTorqueObj speedAngle = CarInterface.receiveData();
+            inSpeed.setValue(speedAngle.getSpeed());
+            inSpeed.setValue(speedAngle.getTorque());
         });
+        receive.start();
+        
+        Timer send;
+        send = new Timer(2000, (ActionEvent ae) -> {
+            CarInterface.send((Double)outTorque.getValue(), (Double)outIR.getValue(), (Double)outUV.getValue());
+        });
+        send.start();
     }
     
     final public JSpinner createRow(String string, boolean enabled){
@@ -55,13 +69,14 @@ public class Gui extends JFrame{
         JLabel label = new JLabel(string,  SwingConstants.RIGHT);
         label.setPreferredSize(new Dimension(80,80));
         label.setAlignmentX(1);
-        JSpinner field = new JSpinner();
+        JSpinner field = new JSpinner(new SpinnerNumberModel(0.0,-1000.0 ,1000.0,0.1));
         field.setEnabled(enabled);
         panel.add(label, BorderLayout.WEST);
         panel.add(field);
         this.add(panel);
         return field;
     }
+    
     
     public static void main(String args[]){
         new Gui();
