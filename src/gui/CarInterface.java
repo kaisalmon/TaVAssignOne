@@ -17,7 +17,7 @@ class CarInterface {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    static void send(double torque, double ir, double uv) {
+    static void send(double torque, double ir, double sonar) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
