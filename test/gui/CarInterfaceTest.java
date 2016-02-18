@@ -5,11 +5,14 @@
  */
 package gui;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import tavassignone.Car;
 import tavassignone.SpeedTorqueObj;
-
 import static org.mockito.Mockito.*;
 
 /**
@@ -48,14 +51,72 @@ public class CarInterfaceTest {
      * Test of send method, of class CarInterface.
      */
     @Test
-    public void testSend() {
-        System.out.println("send");
-        double torque = 0.0;
-        double ir = 0.0;
-        double uv = 0.0;
-        CarInterface.send(torque, ir, uv);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testSend() throws IOException {
+    	boolean result;
+    	boolean expResult[] = {true, false, true};
+    	
+    	Car car = mock(Car.class);
+   
+    	//Test case 0: check if correct torque was sent
+    	for(int i = 0; i < 3; i++){
+    		
+    		CarInterface.send(i, 0, 0);
+    		
+    		if(i != 1){
+    			when(car.checkTorque()).thenReturn((double) i);
+    		} else {
+    			when(car.checkTorque()).thenReturn((double) i+1);
+    		}
+    		
+    		if(car.checkTorque() == i){
+        		result = true;
+        	} else {
+        		result = false;
+        	}
+    		
+    		assertEquals(expResult[i], result);	
+    	}
+    	
+    	//Text case 1: check if correct IR was sent
+    	for(int i = 0; i < 3; i++){
+    		
+    		CarInterface.send(0, i, 0);
+    		
+    		if(i != 1){
+    			when(car.checkIR()).thenReturn((double) i);
+    		} else {
+    			when(car.checkIR()).thenReturn((double) i+1);
+    		}
+    		
+    		if(car.checkIR() == i){
+        		result = true;
+        	} else {
+        		result = false;
+        	}
+    		
+    		assertEquals(expResult[i], result);	
+    	}
+    	
+    	//Test case 2: check if correct UV was sent
+    	for(int i = 0; i < 3; i++){
+    		
+    		CarInterface.send(0, 0, i);
+    		
+    		if(i != 1){
+    			when(car.checkUV()).thenReturn((double) i);
+    		} else {
+    			when(car.checkUV()).thenReturn((double) i+1);
+    		}
+    		
+    		if(car.checkUV() == i){
+        		result = true;
+        	} else {
+        		result = false;
+        	}
+    		
+    		assertEquals(expResult[i], result);	
+    	}
+    	
     }
     
 }
