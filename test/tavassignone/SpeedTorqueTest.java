@@ -67,7 +67,7 @@ public class SpeedTorqueTest {
             SpeedTorqueObj stoResult = st.readSpeedTorque(stream);
             SpeedTorqueObj stoExp = new SpeedTorqueObj(0.5, 3);
             assertEquals(stoExp.getSpeed(), stoResult.getSpeed(), 0);
-            assertEquals(stoExp.getTorque(), stoResult.getTorque(), 0);
+            assertEquals(stoExp.getTorq-ue(), stoResult.getTorque(), 0);
         }
         /* TC 4 */{
             System.out.println("readSpeedTorque - tc4: First packet not corrupt");
