@@ -7,6 +7,7 @@ package gui;
 
 import tavassignone.Car;
 import tavassignone.SpeedTorqueObj;
+import static org.mockito.Mockito.*;
 
 /**
  *
@@ -21,7 +22,10 @@ class CarInterface {
     }
 
     static void send(double torque, double ir, double uv) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	Car car = new Car();
+    	car.recieveTorque(torque);
+    	car.recieveIrDist(ir);
+    	car.recieveUvDist(uv);
     }
     
 }
