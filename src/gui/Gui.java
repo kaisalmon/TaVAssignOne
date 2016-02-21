@@ -52,7 +52,7 @@ public class Gui extends JFrame{
         receive = new Timer(1000, (ActionEvent ae) -> {
             SpeedTorqueObj speedAngle = CarInterface.receiveData();
             inSpeed.setValue(speedAngle.getSpeed());
-            inSpeed.setValue(speedAngle.getTorque());
+            inAngle.setValue(speedAngle.getTorque());
         });
         receive.start();
         
