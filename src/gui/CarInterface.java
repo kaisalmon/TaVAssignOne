@@ -19,30 +19,38 @@ import static org.mockito.Mockito.*;
  * @author Kai
  */
 class CarInterface {
+	
+	static Car dummyCar;
+	
+	public static void setCar(Car car){
+		dummyCar = car;
+	}
 
-    static SpeedTorqueObj receiveData() throws IOException {
-        Car car = new Car();
-        ByteArrayOutputStream stream = car.getSpeedTorque();
-        if (SpeedTorque.isValidStream(stream)){
-            return SpeedTorque.readSpeedTorque(stream);
-        } else {
-            SpeedTorqueObj invalid = new SpeedTorqueObj(-1, -1);
-            return invalid;
-        }
+    static SpeedTorqueObj receiveData() throws Exception {
+    	
+    	ByteArrayOutputStream stream = dummyCar.getSpeedTorque();
+    	if (SpeedTorque.isValidStream(stream)){
+    		return SpeedTorque.readSpeedTorque(stream);
+    	} else {
+    		SpeedTorqueObj invalid = new SpeedTorqueObj(-1, -1);
+    		return invalid;
+    	}
+    	
     }
 
-    static void send(double torque, double ir, double uv) throws IOException {
-        Car car = new Car();
-        SensorData data = new SensorData(torque, ir, uv);
-        ByteArrayOutputStream s = SensorData.getSensorData(data);
-        System.out.println("Here: "+s.toByteArray());
-        
-        if(SensorData.isValidStream(s)){
-            car.recieveData(s);
-        } else {
-            System.out.println("Invalid Stream");
-        }
-        
+    static void send(double torque, double ir, double uv) throws Exception {
+    	SensorData data = new SensorData(torque, ir, uv);
+    	ByteArrayOutputStream s = SensorData.getSensorData(data);
+    	
+    	System.out.println("Here: "+s.toByteArray());
+    	
+    	if(SensorData.isValidStream(s)){
+    		dummyCar.recieveData(s);
+    	} else {
+    		s = null;
+    		dummyCar.recieveData(s);
+    	}
+    	
     }
    
 }
