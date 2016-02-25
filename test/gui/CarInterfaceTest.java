@@ -7,17 +7,23 @@ package gui;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import org.junit.Assert;
 
 import org.junit.Test;
+import org.mockito.Answers;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import static org.junit.Assert.*;
 import tavassignone.Car;
+import tavassignone.SensorData;
 import tavassignone.SpeedTorqueObj;
 import static org.mockito.Mockito.*;
 
 /**
  *
- * @author Kai
+ * @author Kai, Kristiyan & Martina
  */
 public class CarInterfaceTest {
     
@@ -26,13 +32,27 @@ public class CarInterfaceTest {
     
     /**
      * Test of receiveData method, of class CarInterface.
+     * @throws IOException 
      */
     @Test
-    public void testReceiveData() {
+    public void testReceiveData() throws Exception {
+    	
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	byte[][] bytes = {{9, 63, -16, 0, 0, 0, 0, 0, 0, 10, 64, 20, 0, 0, 0, 0, 0, 0, (byte) (11 - Math.pow(2, 7))},
+    			          {9, 63, -16, 0, 0, 0, 0, 0, 0, 10, 64, 20, 0, 0, 0, 0, 0, 0},
+    			          {5, 63, -16, 0, 0, 0, 0, 0, 0, 10, 64, 20, 0, 0, 0, 0, 0, 0, (byte) (11 - Math.pow(2, 7))}};
+    	
+    	Car car = new Car();
+    	CarInterface.setCar(car);
+    
+    	//tc 0: valid stream
+    	
+    	stream.write(bytes[0]);
+    	car.setStream(stream);
     	
     	SpeedTorqueObj test2 = mock(SpeedTorqueObj.class);
-    	when(test2.getSpeed()).thenReturn((double) 12);
-    	when(test2.getTorque()).thenReturn((double) 13);
+    	when(test2.getSpeed()).thenReturn((double) 5);
+    	when(test2.getTorque()).thenReturn((double) 1);
     	
         System.out.println("receiveData");
         
@@ -42,81 +62,109 @@ public class CarInterfaceTest {
         double resultOne = CarInterface.receiveData().getSpeed();
         double resultTwo = CarInterface.receiveData().getTorque();
         
-        assertEquals(expResultSpeed,0.1, resultOne);
-        assertEquals(expResultTorque,0.1, resultTwo);
-  
-    }
+        assertEquals(expResultSpeed, resultOne, 0.1);
+        assertEquals(expResultTorque, resultTwo, 0.1);
+        
+        stream.reset();;
+        
+        //tc 1: Invalid length / incomplete packet
+        
+        stream.write(bytes[1]);
+        car.setStream(stream);
+        
+        SpeedTorqueObj test = mock(SpeedTorqueObj.class);
+        when(test.getSpeed()).thenReturn((double) -1);
+        when(test.getTorque()).thenReturn((double) -1);
+        
+        expResultSpeed = test.getSpeed();
+        expResultTorque = test.getTorque();
 
-    /**
-     * Test of send method, of class CarInterface.
-     */
-    @Test
-    public void testSend() throws IOException {
-    	boolean result;
-    	boolean expResult[] = {true, false, true};
-    	
-    	Car car = mock(Car.class);
+        resultOne = CarInterface.receiveData().getSpeed();
+        resultTwo = CarInterface.receiveData().getTorque();
+        
+        assertEquals(expResultSpeed, resultOne, 0.1);
+        assertEquals(expResultTorque, resultTwo, 0.1);
+        
+        stream.close();
+        
+        //tc 2: Invalid start delimiter // corrupt packet
+        
+        stream.write(bytes[2]);
+        car.setStream(stream);
+        
+        SpeedTorqueObj test3 = mock(SpeedTorqueObj.class);
+        when(test3.getSpeed()).thenReturn((double) -1);
+        when(test3.getTorque()).thenReturn((double) -1);
+        
+        expResultSpeed = test3.getSpeed();
+        expResultTorque = test3.getTorque();
+        
+        resultOne = CarInterface.receiveData().getSpeed();
+        resultTwo = CarInterface.receiveData().getTorque();
+        
+        assertEquals(expResultSpeed, resultOne, 0.1);
+        assertEquals(expResultTorque, resultTwo, 0.1);
+        
+    }
+    
+	@Test
+    public void testSend() throws Exception {
+    
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	Car car = new Car();
+    	CarInterface.setCar(car);
+    
+        /*TC 0: valid stream*/{
    
-    	//Test case 0: check if correct torque was sent
-    	for(int i = 0; i < 3; i++){
-    		
-    		CarInterface.send(i, 0, 0);
-    		
-    		if(i != 1){
-    			when(car.checkTorque()).thenReturn((double) i);
-    		} else {
-    			when(car.checkTorque()).thenReturn((double) i+1);
-    		}
-    		
-    		if(car.checkTorque() == i){
-        		result = true;
-        	} else {
-        		result = false;
-        	}
-    		
-    		assertEquals(expResult[i], result);	
-    	}
+    	byte[][] sensorData = {{5, 63, -32, 0, 0, 0, 0, 0, 0, -122, 63, -32, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, -120},
+    			               {5, 63, -32, 0, 0, 0, 0, 0, 0, -122, 63, -32, 0, 0, 0, 0, 0, 0}
+    	};
+    	stream.write(sensorData[0]);
     	
-    	//Text case 1: check if correct IR was sent
-    	for(int i = 0; i < 3; i++){
-    		
-    		CarInterface.send(0, i, 0);
-    		
-    		if(i != 1){
-    			when(car.checkIR()).thenReturn((double) i);
-    		} else {
-    			when(car.checkIR()).thenReturn((double) i+1);
-    		}
-    		
-    		if(car.checkIR() == i){
-        		result = true;
-        	} else {
-        		result = false;
-        	}
-    		
-    		assertEquals(expResult[i], result);	
-    	}
+    	Car test = mock(Car.class);
+    	when(test.recieveData(stream)).thenReturn(stream);
     	
-    	//Test case 2: check if correct UV was sent
-    	for(int i = 0; i < 3; i++){
-    		
-    		CarInterface.send(0, 0, i);
-    		
-    		if(i != 1){
-    			when(car.checkUV()).thenReturn((double) i);
-    		} else {
-    			when(car.checkUV()).thenReturn((double) i+1);
-    		}
-    		
-    		if(car.checkUV() == i){
-        		result = true;
-        	} else {
-        		result = false;
-        	}
-    		
-    		assertEquals(expResult[i], result);	
-    	}
+    	CarInterface.send(0.5d, 0.5d, 7.25d);
     	
+    	ByteArrayOutputStream expResult = test.recieveData(stream);
+    	ByteArrayOutputStream result = car.recieveData(stream);
+    	
+    	assertEquals(expResult, result);
+    	
+    	stream.close();
+    }
+    }
+    
+    @Test
+    public void testSendValid() throws IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    	Car car = new Car();
+    	CarInterface.setCar(car);
+        
+        /*TC 0: Corrupt stream*/{
+        System.out.println("TC0: Corrupt");
+        byte[] sensorData = {5, 63, -32, 0, 0, 0, 0, 0, 0, -122, 63, -32, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, 10};
+        stream.write(sensorData);
+        CarInterface.sendValid(stream);
+        
+        byte[] expResult = {};
+        byte[] result = car.recieveData(stream).toByteArray();
+        Assert.assertArrayEquals(expResult, result);
+        
+    }
+        
+        /*TC 1: Empty stream*/{
+        System.out.println("TC1: Empty");
+     
+        CarInterface.sendValid(stream);
+        
+        byte[] expResult = {};
+        byte[] result = car.recieveData(stream).toByteArray();
+        Assert.assertArrayEquals(expResult, result);
+        
+    }
+   
+        
     }
     
 }

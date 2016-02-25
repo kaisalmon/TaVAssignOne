@@ -5,6 +5,7 @@
  */
 package gui;
 
+import java.io.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -27,7 +28,7 @@ import tavassignone.SpeedTorqueObj;
  *
  * @author Kai
  */
-public class Gui extends JFrame{
+public class Gui extends JFrame {
     final JSpinner outIR, outSonar, outTorque, inSpeed, inAngle;
     
     public Gui() throws HeadlessException {
@@ -50,15 +51,19 @@ public class Gui extends JFrame{
        // });
         Timer receive;
         receive = new Timer(1000, (ActionEvent ae) -> {
+            try{
             SpeedTorqueObj speedAngle = CarInterface.receiveData();
             inSpeed.setValue(speedAngle.getSpeed());
             inAngle.setValue(speedAngle.getTorque());
+            }catch(Exception e){}
         });
         receive.start();
         
         Timer send;
         send = new Timer(2000, (ActionEvent ae) -> {
+            try{
             CarInterface.send((Double)outTorque.getValue(), (Double)outIR.getValue(), (Double)outSonar.getValue());
+            }catch (Exception e){}
         });
         send.start();
     }

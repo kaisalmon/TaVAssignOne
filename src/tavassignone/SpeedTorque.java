@@ -50,7 +50,7 @@ public class SpeedTorque {
      * @param stream
      * @return 
      */
-    public SpeedTorqueObj readSpeedTorque (ByteArrayOutputStream stream){
+    public static SpeedTorqueObj readSpeedTorque (ByteArrayOutputStream stream){
         double speed = 0;
         double torque = 0;
         int startindex = 0;
@@ -114,7 +114,7 @@ public class SpeedTorque {
      * @param b
      * @return 
      */
-    public int packetStartAt(int startindex, byte[] b){
+    public static int packetStartAt(int startindex, byte[] b){
         //readSpeedTorque tc 0: stream is empty
         //also readSpeedTorque tc 1: no full packets (when stream ends without
         //finding a full packet)

@@ -5,36 +5,80 @@
  */
 package gui;
 
-import java.io.*;
-
-import tavassignone.SpeedTorque;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 import tavassignone.Car;
+import tavassignone.SensorData;
+import tavassignone.SpeedTorque;
 import tavassignone.SpeedTorqueObj;
-import static org.mockito.Mockito.*;
 
 /**
  *
- * @author Kai
+ * @author Kai, Kristiyan & Martina
  */
 class CarInterface {
+	
+	static Car dummyCar;
+	
+	public static void setCar(Car car){
+		dummyCar = car;
+	}
 
-    static SpeedTorqueObj receiveData() {    	
-    	Car car = new Car();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream(); //This must contain stream from car
-        SpeedTorque dummy = new SpeedTorque();
-        SpeedTorqueObj object = dummy.readSpeedTorque(stream);
-        return object;
-        
-        /*Car car = new Car();
-    	SpeedTorqueObj data = new SpeedTorqueObj(car.getSpeed(), car.getTorque());
-        return data;*/
+
+    static SpeedTorqueObj receiveData() throws Exception {
+    	
+    	ByteArrayOutputStream stream = dummyCar.getSpeedTorque();
+    	if (SpeedTorque.isValidStream(stream)){
+    		return SpeedTorque.readSpeedTorque(stream);
+    	} else {
+    		SpeedTorqueObj invalid = new SpeedTorqueObj(-1, -1);
+    		return invalid;
+    	}
+    	
+
     }
-
-    static void send(double torque, double ir, double uv) {
-    	Car car = new Car();
-    	car.recieveTorque(torque);
-    	car.recieveIrDist(ir);
-    	car.recieveUvDist(uv);
+    /*
+    Summary:
+            Originally contained the functionality in sendValid. Another method
+            was created in order to test previously untested functionality.
+    
+    tc0: The stream is valid
+    */
+    static void send(double torque, double ir, double uv) throws Exception {
+    	SensorData data = new SensorData(torque, ir, uv);
+    	ByteArrayOutputStream s = SensorData.getSensorData(data);
+        
+        sendValid(s);
+        
+        
+    	
     }
     
+    /*
+    Summary: Method written to separate untested functionality from the original
+            send method. If the stream is valid, it gets sent to the car. If not,
+            the stream is set to null before it's sent. The possibility of getting
+            null is handled by the car.(?)
+    Pre-condition:
+            sendValid receives a stream.
+    Post-condition:
+            Either the original stream is sent, or the car receives a stream of 
+            value null.
+    tc0: The stream is corrupt
+    tc1: The stream is empty
+    */
+    public static void sendValid(ByteArrayOutputStream stream) {
+        if(SensorData.isValidStream(stream)){
+    		dummyCar.recieveData(stream);
+                byte[] array = stream.toByteArray();
+                System.out.println("Sent data: "+ Arrays.toString(array));
+    	} else {
+    		stream.reset();
+    		dummyCar.recieveData(stream);
+                System.out.println("Empty stream sent");
+    	}
+        
+    }
+   
 }
