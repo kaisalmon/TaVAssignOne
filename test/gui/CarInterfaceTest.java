@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 /**
  *
- * @author Kai, Kristiyan & Martina
+ * @author Kristiyan & Martina
  */
 public class CarInterfaceTest {
     
@@ -122,12 +122,12 @@ public class CarInterfaceTest {
     	stream.write(sensorData[0]);
     	
     	Car test = mock(Car.class);
-    	when(test.recieveData(stream)).thenReturn(stream);
+    	when(test.receiveData(stream)).thenReturn(stream);
     	
     	CarInterface.send(0.5d, 0.5d, 7.25d);
     	
-    	ByteArrayOutputStream expResult = test.recieveData(stream);
-    	ByteArrayOutputStream result = car.recieveData(stream);
+    	ByteArrayOutputStream expResult = test.receiveData(stream);
+    	ByteArrayOutputStream result = car.receiveData(stream);
     	
     	assertEquals(expResult, result);
     	
@@ -148,7 +148,7 @@ public class CarInterfaceTest {
         CarInterface.sendValid(stream);
         
         byte[] expResult = {};
-        byte[] result = car.recieveData(stream).toByteArray();
+        byte[] result = car.receiveData(stream).toByteArray();
         Assert.assertArrayEquals(expResult, result);
         
     }
@@ -159,9 +159,20 @@ public class CarInterfaceTest {
         CarInterface.sendValid(stream);
         
         byte[] expResult = {};
-        byte[] result = car.recieveData(stream).toByteArray();
+        byte[] result = car.receiveData(stream).toByteArray();
         Assert.assertArrayEquals(expResult, result);
         
+    }
+        
+        /*TC 2: Valid stream*/{
+        System.out.println("TC2: Valid");
+        byte[] sensorData = {5, 63, -32, 0, 0, 0, 0, 0, 0, -122, 63, -32, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, -120};
+        stream.write(sensorData);
+        CarInterface.sendValid(stream);
+        
+        byte[] expResult = {5, 63, -32, 0, 0, 0, 0, 0, 0, -122, 63, -32, 0, 0, 0, 0, 0, 0, -121, 64, 29, 0, 0, 0, 0, 0, 0, -120};
+        byte[] result = car.receiveData(stream).toByteArray();
+        Assert.assertArrayEquals(expResult, result);
     }
    
         

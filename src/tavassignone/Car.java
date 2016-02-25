@@ -1,5 +1,4 @@
-//From car, generate bitstreams of data
-//Called in CarInterface
+
 
 package tavassignone;
 
@@ -22,7 +21,7 @@ public class Car {
 		this.stream = stream;
 	}
 
-	public ByteArrayOutputStream recieveData(ByteArrayOutputStream sensorData) {
+	public ByteArrayOutputStream receiveData(ByteArrayOutputStream sensorData) {
 		return sensorData;
 	}
 	

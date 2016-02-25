@@ -25,7 +25,14 @@ class CarInterface {
 		dummyCar = car;
 	}
 
-
+        /*
+        Summary:
+                Returns an object with the car's speed and angle values.
+        
+        tc0:    A valid packet is received
+        tc1:    An incomplete packet or a packet of invalid length is received
+        tc2:    A corrupt packet is received
+        */
     static SpeedTorqueObj receiveData() throws Exception {
     	
     	ByteArrayOutputStream stream = dummyCar.getSpeedTorque();
@@ -43,7 +50,7 @@ class CarInterface {
             Originally contained the functionality in sendValid. Another method
             was created in order to test previously untested functionality.
     
-    tc0: The stream is valid
+    tc0: 
     */
     static void send(double torque, double ir, double uv) throws Exception {
     	SensorData data = new SensorData(torque, ir, uv);
@@ -65,17 +72,18 @@ class CarInterface {
     Post-condition:
             Either the original stream is sent, or the car receives a stream of 
             value null.
-    tc0: The stream is corrupt
-    tc1: The stream is empty
+    tc0: The stream is valid
+    tc1: The stream is corrupt
+    tc2: The stream is empty
     */
     public static void sendValid(ByteArrayOutputStream stream) {
         if(SensorData.isValidStream(stream)){
-    		dummyCar.recieveData(stream);
+    		dummyCar.receiveData(stream);
                 byte[] array = stream.toByteArray();
                 System.out.println("Sent data: "+ Arrays.toString(array));
     	} else {
     		stream.reset();
-    		dummyCar.recieveData(stream);
+    		dummyCar.receiveData(stream);
                 System.out.println("Empty stream sent");
     	}
         
