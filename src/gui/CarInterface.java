@@ -50,7 +50,8 @@ class CarInterface {
             Originally contained the functionality in sendValid. Another method
             was created in order to test previously untested functionality.
     
-    tc0: 
+    tc0: The sensor values result in a data packet of the correct length and 
+         with correct delimiters.
     */
     static void send(double torque, double ir, double uv) throws Exception {
     	SensorData data = new SensorData(torque, ir, uv);
@@ -72,9 +73,9 @@ class CarInterface {
     Post-condition:
             Either the original stream is sent, or the car receives a stream of 
             value null.
-    tc0: The stream is valid
-    tc1: The stream is corrupt
-    tc2: The stream is empty
+    tc0: The stream is corrupt
+    tc1: The stream is empty
+    tc2: The stream is valid
     */
     public static void sendValid(ByteArrayOutputStream stream) {
         if(SensorData.isValidStream(stream)){
