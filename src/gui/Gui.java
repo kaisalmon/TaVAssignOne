@@ -55,6 +55,7 @@ public class Gui extends JFrame {
             SpeedTorqueObj speedAngle = CarInterface.receiveData();
             inSpeed.setValue(speedAngle.getSpeed());
             inAngle.setValue(speedAngle.getTorque());
+            System.out.println("Values received.");
             }catch(Exception e){}
         });
         receive.start();
@@ -63,6 +64,7 @@ public class Gui extends JFrame {
         send = new Timer(2000, (ActionEvent ae) -> {
             try{
             CarInterface.send((Double)outTorque.getValue(), (Double)outIR.getValue(), (Double)outSonar.getValue());
+            System.out.println("Values sent.");
             }catch (Exception e){}
         });
         send.start();
